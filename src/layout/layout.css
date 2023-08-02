@@ -1,0 +1,6 @@
+.ant-layout.ant-layout-has-sider {
+  min-height: 100vh;
+}
+.ant-layout .ant-layout-sider-children {
+  padding-top: 55px !important;
+}
