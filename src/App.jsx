@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import MainLayout from "./layout";
 import EmployeeList from "./pages/Employee";
-import TaskPage from "./pages/TaskPage";
+import TaskPage from "./pages/Task";
 import AssignTaskPage from "./pages/AssignTask";
 
 function App() {

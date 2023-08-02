@@ -89,11 +89,11 @@ const TaskPage = () => {
   return (
     <div className="p-4">
       <div>
-        <h1 className="text-2xl text-center">Lask List</h1>
+        <h1 className="text-2xl text-center">Task List</h1>
         {/* // create emploee button  */}
         <div className="flex justify-end">
           <button
-            className="bg-green-500 text-white px-4 py-2 rounded-md"
+            className="bg-green-500 text-white px-4 py-2 rounded-md mb-2"
             onClick={() => {
               setIsModalOpen(true);
             }}

@@ -8,23 +8,53 @@ import Sider from "antd/es/layout/Sider";
 import { Footer, Header } from "antd/es/layout/layout";
 import { Link } from "react-router-dom";
 import "./layout.css";
+import SubMenu from "antd/es/menu/SubMenu";
 
 const MainLayout = (props) => {
+  const menuItems = [
+    {
+      key: "1",
+      icon: <UserOutlined />,
+      link: "/employee",
+      title: "Employee",
+    },
+    {
+      key: "2",
+      icon: <VideoCameraOutlined />,
+      link: "/task",
+      title: "Task",
+    },
+    {
+      key: "3",
+      icon: <UploadOutlined />,
+      link: "/assign_task",
+      title: "Assign Task",
+    },
+  ];
   return (
     <div>
       <Layout>
         <Sider breakpoint="lg" collapsedWidth="0">
           <div className="logo" />
           <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
-            <Menu.Item key="1" icon={<UserOutlined />}>
-              <Link to="/employee">Employee</Link>
-            </Menu.Item>
-            <Menu.Item key="2" icon={<VideoCameraOutlined />}>
-              <Link to="/task">Task</Link>
-            </Menu.Item>
-            <Menu.Item key="3" icon={<UploadOutlined />}>
-              <Link to="/assign_task">Assign Task</Link>
-            </Menu.Item>
+            {menuItems.map((item) => {
+              if (item.subMenu) {
+                return (
+                  <SubMenu key={item.key} icon={item.icon} title={item.title}>
+                    {item.subMenu.map((subItem) => (
+                      <Menu.Item key={subItem.key}>
+                        <Link to={subItem.link}>{subItem.title}</Link>
+                      </Menu.Item>
+                    ))}
+                  </SubMenu>
+                );
+              }
+              return (
+                <Menu.Item key={item.key} icon={item.icon}>
+                  <Link to={item.link}>{item.title}</Link>
+                </Menu.Item>
+              );
+            })}
           </Menu>
         </Sider>
         <Layout>

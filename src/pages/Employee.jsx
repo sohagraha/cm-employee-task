@@ -108,7 +108,7 @@ const EmployeeList = () => {
         <h1 className="text-2xl text-center">Employee List</h1>
         <div className="flex justify-end">
           <button
-            className="bg-green-500 text-white px-4 py-2 rounded-md"
+            className="bg-green-500 text-white px-4 py-2 rounded-md mb-2"
             onClick={() => {
               setIsModalOpen(true);
             }}
