@@ -1,18 +1,26 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Form, Modal, Table } from "antd";
 import { useEffect, useState } from "react";
 import AssignTaskForm from "../components/AssignTaskForm";
+import {
+  deleteFromLocalStorage,
+  getDataFromLocalStorage,
+  uniqueIdGenerator,
+} from "../utils/comonFunction";
 
 const AssignTaskPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [assignTaskData, setAssignTaskData] = useState({
-    name: "",
-  });
-  const [taskassignlist, setTasklist] = useState([]);
+  const [taskassignlist, setTaskAssignlist] = useState([]);
+
+  useEffect(() => {
+    getDataFromLocalStorage("taskassignlist", setTaskAssignlist);
+  }, [localStorage.getItem("taskassignlist")]);
+
+  const [form] = Form.useForm();
 
   const handleOk = async () => {
     await form.validateFields();
     const data = form.getFieldsValue(true);
-    console.log(data);
     const taskassignlist =
       JSON.parse(localStorage.getItem("taskassignlist")) || [];
 
@@ -24,28 +32,21 @@ const AssignTaskPage = () => {
         return item;
       });
       localStorage.setItem("taskassignlist", JSON.stringify(newTasAssignList));
-      setTasklist(newTasAssignList);
-      form.resetFields();
-      setIsModalOpen(false);
-      return;
+      setTaskAssignlist(newTasAssignList);
     } else {
-      const uniqueId =
-        taskassignlist.sort((a, b) => b.uniqueId - a.uniqueId)[0]?.uniqueId ||
-        0;
-      const newData = { ...data, uniqueId: uniqueId + 1 };
+      const uniqueId = uniqueIdGenerator("taskassignlist");
+      const newData = { ...data, uniqueId: uniqueId, createtedAt: Date.now() };
       taskassignlist.push(newData);
       localStorage.setItem("taskassignlist", JSON.stringify(taskassignlist));
-      form.resetFields();
-      setIsModalOpen(false);
     }
+    form.resetFields();
+    setIsModalOpen(false);
   };
 
   const handleCancel = () => {
     form.resetFields();
     setIsModalOpen(false);
   };
-
-  const [form] = Form.useForm();
 
   const columns = [
     {
@@ -65,8 +66,15 @@ const AssignTaskPage = () => {
       },
     },
     {
+      title: "Created At",
+      dataIndex: "createtedAt",
+      key: "createtedAt",
+      render: (text) => <span>{new Date(text).toLocaleString()}</span>,
+    },
+    {
       title: "Action",
       key: "action",
+      width: 200,
       // eslint-disable-next-line no-unused-vars
       render: (text, record) => (
         <span>
@@ -82,16 +90,11 @@ const AssignTaskPage = () => {
           <button
             className="bg-red-500 text-white px-4 py-2 rounded-md"
             onClick={() => {
-              const taskassignlist =
-                JSON.parse(localStorage.getItem("taskassignlist")) || [];
-              const newTasAssignList = taskassignlist.filter(
-                (item) => item.uniqueId !== record.uniqueId
-              );
-              localStorage.setItem(
+              deleteFromLocalStorage(
                 "taskassignlist",
-                JSON.stringify(newTasAssignList)
+                record,
+                setTaskAssignlist
               );
-              setTasklist(newTasAssignList);
             }}
           >
             Delete
@@ -100,12 +103,6 @@ const AssignTaskPage = () => {
       ),
     },
   ];
-
-  useEffect(() => {
-    const taskassignlist =
-      JSON.parse(localStorage.getItem("taskassignlist")) || [];
-    setTasklist(taskassignlist);
-  }, [localStorage.getItem("taskassignlist")]);
 
   return (
     <div className="p-4">
@@ -117,13 +114,6 @@ const AssignTaskPage = () => {
             className="bg-green-500 text-white px-4 py-2 rounded-md"
             onClick={() => {
               setIsModalOpen(true);
-              form.resetFields({
-                name: "",
-                id: "",
-                designation: "",
-                email: "",
-                phone: "",
-              });
             }}
           >
             Create Task
@@ -139,12 +129,7 @@ const AssignTaskPage = () => {
       />
 
       <Modal open={isModalOpen} onCancel={handleCancel} footer={false}>
-        <AssignTaskForm
-          form={form}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          initData={assignTaskData}
-        />
+        <AssignTaskForm form={form} onOk={handleOk} onCancel={handleCancel} />
       </Modal>
     </div>
   );

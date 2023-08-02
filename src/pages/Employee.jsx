@@ -1,23 +1,27 @@
 import { Form, Modal, Table } from "antd";
 import { useEffect, useState } from "react";
 import EmployeeForm from "../components/EmployeeForm";
+import {
+  deleteFromLocalStorage,
+  getDataFromLocalStorage,
+  uniqueIdGenerator,
+} from "../utils/comonFunction";
 
 const EmployeeList = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [employeeData, setEmployeeData] = useState({
-    name: "",
-    id: "",
-    designation: "",
-    email: "",
-    phone: "",
-  });
   const [employeeList, setEmployeeList] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    getDataFromLocalStorage("employeeList", setEmployeeList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localStorage.getItem("employeeList")]);
 
   const handleOk = async () => {
     await form.validateFields();
     const data = form.getFieldsValue(true);
-    const employeeList = JSON.parse(localStorage.getItem("employeeList")) || [];
 
+    // if uniqueId already exists, update the existing record
     if (data.uniqueId) {
       const newEmployeeList = employeeList.map((item) => {
         if (item.uniqueId === data.uniqueId) {
@@ -25,29 +29,22 @@ const EmployeeList = () => {
         }
         return item;
       });
-      console.log(newEmployeeList);
+
       localStorage.setItem("employeeList", JSON.stringify(newEmployeeList));
-      setEmployeeList(newEmployeeList);
-      form.resetFields();
-      setIsModalOpen(false);
-      return;
     } else {
-      const uniqueId =
-        employeeList.sort((a, b) => b.uniqueId - a.uniqueId)[0]?.uniqueId || 0;
-      const newData = { ...data, uniqueId: uniqueId + 1 };
+      const uniqueId = uniqueIdGenerator("employeeList");
+      const newData = { ...data, uniqueId: uniqueId };
       employeeList.push(newData);
       localStorage.setItem("employeeList", JSON.stringify(employeeList));
-      form.resetFields();
-      setIsModalOpen(false);
     }
+    form.resetFields();
+    setIsModalOpen(false);
   };
 
   const handleCancel = () => {
     form.resetFields();
     setIsModalOpen(false);
   };
-
-  const [form] = Form.useForm();
 
   const columns = [
     {
@@ -77,6 +74,8 @@ const EmployeeList = () => {
     },
     {
       title: "Action",
+      dataIndex: "action",
+      width: 200,
       key: "action",
       // eslint-disable-next-line no-unused-vars
       render: (text, record) => (
@@ -93,16 +92,7 @@ const EmployeeList = () => {
           <button
             className="bg-red-500 text-white px-4 py-2 rounded-md"
             onClick={() => {
-              const employeeList =
-                JSON.parse(localStorage.getItem("employeeList")) || [];
-              const newEmployeeList = employeeList.filter(
-                (item) => item.uniqueId !== record.uniqueId
-              );
-              localStorage.setItem(
-                "employeeList",
-                JSON.stringify(newEmployeeList)
-              );
-              setEmployeeList(newEmployeeList);
+              deleteFromLocalStorage("employeeList", record, setEmployeeList);
             }}
           >
             Delete
@@ -112,28 +102,15 @@ const EmployeeList = () => {
     },
   ];
 
-  useEffect(() => {
-    const employeeList = JSON.parse(localStorage.getItem("employeeList")) || [];
-    setEmployeeList(employeeList);
-  }, [localStorage.getItem("employeeList")]);
-
   return (
     <div className="p-4">
       <div>
         <h1 className="text-2xl text-center">Employee List</h1>
-        {/* // create emploee button  */}
         <div className="flex justify-end">
           <button
             className="bg-green-500 text-white px-4 py-2 rounded-md"
             onClick={() => {
               setIsModalOpen(true);
-              form.resetFields({
-                name: "",
-                id: "",
-                designation: "",
-                email: "",
-                phone: "",
-              });
             }}
           >
             Create Employee
@@ -148,18 +125,8 @@ const EmployeeList = () => {
         pagination={false}
       />
 
-      <Modal
-        title={employeeData.id ? "Edit Employee" : "Create Employee"}
-        open={isModalOpen}
-        onCancel={handleCancel}
-        footer={false}
-      >
-        <EmployeeForm
-          form={form}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          initData={employeeData}
-        />
+      <Modal open={isModalOpen} onCancel={handleCancel} footer={false}>
+        <EmployeeForm form={form} onOk={handleOk} onCancel={handleCancel} />
       </Modal>
     </div>
   );

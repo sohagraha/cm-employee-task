@@ -1,28 +1,32 @@
-import { Button, Form, Input } from "antd";
+/* eslint-disable react/prop-types */
+import { Button, Form } from "antd";
+import CommonForm from "../common/CommonForm";
+
+const formFields = [
+  {
+    name: "name",
+    label: "Name",
+    rules: [
+      {
+        required: true,
+        message: "Please input the title of collection!",
+      },
+    ],
+    type: "text",
+    group: "input",
+  },
+];
 
 // eslint-disable-next-line react/prop-types
 const TaskForm = ({ form, onOk, onCancel }) => {
+  const isEdit = form.getFieldValue("uniqueId");
   return (
     <div>
       <h1 className="text-md font-bold text-center">
-        {
-          // eslint-disable-next-line react/prop-types
-          form.getFieldValue("name") ? "Edit Task" : "Add Task"
-        }
+        {isEdit ? "Edit Task" : "Add Task"}
       </h1>
       <Form form={form} layout="vertical">
-        <Form.Item
-          name="name"
-          label="Name"
-          rules={[
-            {
-              required: true,
-              message: "Please input the title of collection!",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+        <CommonForm formFields={formFields} form={form} />
 
         {/* cancle and submit button */}
 
