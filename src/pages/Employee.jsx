@@ -1,38 +1,42 @@
 import { Form, Modal, Table } from "antd";
 import { useEffect, useState } from "react";
-import TaskForm from "../components/TaskForm";
+import EmployeeForm from "../components/EmployeeForm";
 
-const TaskPage = () => {
+const EmployeeList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [employeeData, setEmployeeData] = useState({
     name: "",
+    id: "",
+    designation: "",
+    email: "",
+    phone: "",
   });
-  const [tasklist, setTasklist] = useState([]);
+  const [employeeList, setEmployeeList] = useState([]);
 
   const handleOk = async () => {
     await form.validateFields();
     const data = form.getFieldsValue(true);
-    const tasklist = JSON.parse(localStorage.getItem("tasklist")) || [];
+    const employeeList = JSON.parse(localStorage.getItem("employeeList")) || [];
 
     if (data.uniqueId) {
-      const newTaskList = tasklist.map((item) => {
+      const newEmployeeList = employeeList.map((item) => {
         if (item.uniqueId === data.uniqueId) {
           return data;
         }
         return item;
       });
-      console.log(newTaskList);
-      localStorage.setItem("tasklist", JSON.stringify(newTaskList));
-      setTasklist(newTaskList);
+      console.log(newEmployeeList);
+      localStorage.setItem("employeeList", JSON.stringify(newEmployeeList));
+      setEmployeeList(newEmployeeList);
       form.resetFields();
       setIsModalOpen(false);
       return;
     } else {
       const uniqueId =
-        tasklist.sort((a, b) => b.uniqueId - a.uniqueId)[0]?.uniqueId || 0;
+        employeeList.sort((a, b) => b.uniqueId - a.uniqueId)[0]?.uniqueId || 0;
       const newData = { ...data, uniqueId: uniqueId + 1 };
-      tasklist.push(newData);
-      localStorage.setItem("tasklist", JSON.stringify(tasklist));
+      employeeList.push(newData);
+      localStorage.setItem("employeeList", JSON.stringify(employeeList));
       form.resetFields();
       setIsModalOpen(false);
     }
@@ -52,6 +56,26 @@ const TaskPage = () => {
       key: "name",
     },
     {
+      title: "id",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Designation",
+      dataIndex: "designation",
+      key: "designation",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Phone",
+      dataIndex: "phone",
+      key: "phone",
+    },
+    {
       title: "Action",
       key: "action",
       // eslint-disable-next-line no-unused-vars
@@ -69,13 +93,16 @@ const TaskPage = () => {
           <button
             className="bg-red-500 text-white px-4 py-2 rounded-md"
             onClick={() => {
-              const tasklist =
-                JSON.parse(localStorage.getItem("tasklist")) || [];
-              const newTaskList = tasklist.filter(
+              const employeeList =
+                JSON.parse(localStorage.getItem("employeeList")) || [];
+              const newEmployeeList = employeeList.filter(
                 (item) => item.uniqueId !== record.uniqueId
               );
-              localStorage.setItem("tasklist", JSON.stringify(newTaskList));
-              setTasklist(newTaskList);
+              localStorage.setItem(
+                "employeeList",
+                JSON.stringify(newEmployeeList)
+              );
+              setEmployeeList(newEmployeeList);
             }}
           >
             Delete
@@ -86,14 +113,14 @@ const TaskPage = () => {
   ];
 
   useEffect(() => {
-    const tasklist = JSON.parse(localStorage.getItem("tasklist")) || [];
-    setTasklist(tasklist);
-  }, [localStorage.getItem("tasklist")]);
+    const employeeList = JSON.parse(localStorage.getItem("employeeList")) || [];
+    setEmployeeList(employeeList);
+  }, [localStorage.getItem("employeeList")]);
 
   return (
     <div className="p-4">
       <div>
-        <h1 className="text-2xl text-center">Lask List</h1>
+        <h1 className="text-2xl text-center">Employee List</h1>
         {/* // create emploee button  */}
         <div className="flex justify-end">
           <button
@@ -109,20 +136,25 @@ const TaskPage = () => {
               });
             }}
           >
-            Create Task
+            Create Employee
           </button>
         </div>
       </div>
 
       <Table
-        dataSource={tasklist}
+        dataSource={employeeList}
         columns={columns}
         bordered
         pagination={false}
       />
 
-      <Modal open={isModalOpen} onCancel={handleCancel} footer={false}>
-        <TaskForm
+      <Modal
+        title={employeeData.id ? "Edit Employee" : "Create Employee"}
+        open={isModalOpen}
+        onCancel={handleCancel}
+        footer={false}
+      >
+        <EmployeeForm
           form={form}
           onOk={handleOk}
           onCancel={handleCancel}
@@ -133,4 +165,4 @@ const TaskPage = () => {
   );
 };
 
-export default TaskPage;
+export default EmployeeList;
