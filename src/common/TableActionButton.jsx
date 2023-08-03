@@ -26,6 +26,8 @@ const TableActionButton = ({ type, onClick }) => {
         <DeletePopover onDelete={onClick} />
       </button>
     );
+  } else {
+    return null;
   }
 };
 export default TableActionButton;

@@ -14,17 +14,14 @@ const AssignTaskPage = () => {
   const [taskassignlist, setTaskAssignlist] = useState([]);
 
   useEffect(() => {
-    getDataFromLocalStorage("taskassignlist", setTaskAssignlist);
-  }, [localStorage.getItem("taskassignlist")]);
+    getDataFromLocalStorage("taskAssignList", setTaskAssignlist);
+  }, [localStorage.getItem("taskAssignList")]);
 
   const [form] = Form.useForm();
 
   const handleOk = async () => {
     await form.validateFields();
     const data = form.getFieldsValue(true);
-    console.log(data);
-    const taskassignlist =
-      JSON.parse(localStorage.getItem("taskassignlist")) || [];
 
     if (data.uniqueId) {
       const newTasAssignList = taskassignlist.map((item) => {
@@ -33,13 +30,14 @@ const AssignTaskPage = () => {
         }
         return item;
       });
-      localStorage.setItem("taskassignlist", JSON.stringify(newTasAssignList));
-      setTaskAssignlist(newTasAssignList);
+
+      localStorage.setItem("taskAssignList", JSON.stringify(newTasAssignList));
+      // setTaskAssignlist(newTasAssignList);
     } else {
-      const uniqueId = uniqueIdGenerator("taskassignlist");
+      const uniqueId = uniqueIdGenerator("taskAssignList");
       const newData = { ...data, uniqueId: uniqueId, createtedAt: Date.now() };
       taskassignlist.push(newData);
-      localStorage.setItem("taskassignlist", JSON.stringify(taskassignlist));
+      localStorage.setItem("taskAssignList", JSON.stringify(taskassignlist));
     }
     form.resetFields();
     setIsModalOpen(false);
@@ -88,7 +86,7 @@ const AssignTaskPage = () => {
             type="delete"
             onClick={() => {
               deleteFromLocalStorage(
-                "taskassignlist",
+                "taskAssignList",
                 record,
                 setTaskAssignlist
               );

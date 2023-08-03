@@ -72,9 +72,10 @@ const MainLayout = (props) => {
           <Footer
             style={{
               textAlign: "center",
+              fontWeight: "bold",
             }}
           >
-            ©2018 Created by Sohag Raha
+            ©2023 Created by Sohag Raha
           </Footer>
         </Layout>
       </Layout>

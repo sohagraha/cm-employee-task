@@ -20,15 +20,16 @@ const EmployeeList = () => {
 
   useEffect(() => {
     getDataFromLocalStorage("employeeList", setEmployeeList);
-    getDataFromLocalStorage("taskassignlist", setTaskList);
+    getDataFromLocalStorage("taskAssignList", setTaskList);
   }, [
     localStorage.getItem("employeeList"),
-    localStorage.getItem("taskassignlist"),
+    localStorage.getItem("taskAssignList"),
   ]);
 
   const handleOk = async () => {
     await form.validateFields();
     const data = form.getFieldsValue(true);
+
     // if uniqueId already exists, update the existing record
     if (data.uniqueId) {
       const newEmployeeList = employeeList.map((item) => {
@@ -45,8 +46,7 @@ const EmployeeList = () => {
       localStorage.setItem("employeeList", JSON.stringify(newEmployeeList));
 
       // change task list in assign task form
-
-      const newTaskList = taskList.map((item) => {
+      const modifiedTaskList = taskList.map((item) => {
         if (item.employee.uniqueId === data.uniqueId) {
           return {
             ...item,
@@ -59,9 +59,9 @@ const EmployeeList = () => {
         }
         return item;
       });
-      localStorage.setItem("taskassignlist", JSON.stringify(newTaskList));
-      console.log(newTaskList);
+      localStorage.setItem("taskAssignList", JSON.stringify(modifiedTaskList));
     } else {
+      // if uniqueId does not exist, create a new record
       const uniqueId = uniqueIdGenerator("employeeList");
       const newData = {
         ...data,
@@ -112,7 +112,6 @@ const EmployeeList = () => {
       dataIndex: "action",
       width: 200,
       key: "action",
-      // eslint-disable-next-line no-unused-vars
       render: (text, record) => (
         <span>
           <TableActionButton
@@ -132,13 +131,11 @@ const EmployeeList = () => {
             type="delete"
             onClick={() => {
               deleteFromLocalStorage("employeeList", record, setEmployeeList);
-
-              // corrosponding task list will be deleted
               const newTaskList = taskList.filter(
                 (item) => item.employee.uniqueId !== record.uniqueId
               );
               localStorage.setItem(
-                "taskassignlist",
+                "taskAssignList",
                 JSON.stringify(newTaskList)
               );
             }}

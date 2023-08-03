@@ -2,7 +2,6 @@
 import { Button, Form } from "antd";
 import CommonStaticForm from "../common/CommonStaticForm";
 
-// eslint-disable-next-line react/prop-types
 const EmployeeForm = ({ form, onOk, onCancel }) => {
   const isEdit = form.getFieldValue("uniqueId");
 

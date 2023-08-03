@@ -3,37 +3,13 @@
 import { Button, Form } from "antd";
 import { useEffect, useState } from "react";
 import CommonStaticForm from "../common/CommonStaticForm";
+import { getDataFromLocalStorage } from "../utils/comonFunction";
 
-// eslint-disable-next-line react/prop-types
 const AssignTaskForm = ({ form, onOk, onCancel }) => {
   const [employeeList, setEmployeeList] = useState([]);
-  // const [taskList, setTaskList] = useState([]);
-
-  const getEmployeeList = () => {
-    const employeeList = JSON.parse(localStorage.getItem("employeeList"));
-    const modifiedEmployeeList = employeeList?.map((item, index) => {
-      return {
-        ...item,
-        key: index,
-      };
-    });
-    setEmployeeList(modifiedEmployeeList);
-  };
-  // const getTaskList = () => {
-  //   const taskList = JSON.parse(localStorage.getItem("tasklist"));
-  //   const modifiedTaskList = taskList?.map((item) => {
-  //     return {
-  //       ...item,
-  //       value: item.uniqueId,
-  //       label: item.name,
-  //     };
-  //   });
-  //   setTaskList(modifiedTaskList);
-  // };
 
   useEffect(() => {
-    getEmployeeList();
-    // getTaskList();
+    getDataFromLocalStorage("employeeList", setEmployeeList);
   }, [localStorage.getItem("employeeList")]);
 
   const isEdit = form.getFieldValue("uniqueId");
