@@ -1,7 +1,7 @@
 import {
   UploadOutlined,
   UserOutlined,
-  VideoCameraOutlined,
+  // VideoCameraOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import Sider from "antd/es/layout/Sider";
@@ -19,12 +19,6 @@ const MainLayout = (props) => {
       title: "Employee",
     },
     {
-      key: "2",
-      icon: <VideoCameraOutlined />,
-      link: "/task",
-      title: "Task",
-    },
-    {
       key: "3",
       icon: <UploadOutlined />,
       link: "/assign_task",
@@ -38,10 +32,10 @@ const MainLayout = (props) => {
           <div className="logo" />
           <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
             {menuItems.map((item) => {
-              if (item.subMenu) {
+              if (item?.subMenu?.length) {
                 return (
                   <SubMenu key={item.key} icon={item.icon} title={item.title}>
-                    {item.subMenu.map((subItem) => (
+                    {item?.subMenu?.map((subItem) => (
                       <Menu.Item key={subItem.key}>
                         <Link to={subItem.link}>{subItem.title}</Link>
                       </Menu.Item>

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Button, Form } from "antd";
-import CommonForm from "../common/CommonForm";
+import CommonStaticForm from "../common/CommonStaticForm";
 
 // eslint-disable-next-line react/prop-types
 const EmployeeForm = ({ form, onOk, onCancel }) => {
@@ -13,7 +13,7 @@ const EmployeeForm = ({ form, onOk, onCancel }) => {
       rules: [
         {
           required: true,
-          message: "Please input the title of collection!",
+          message: "Please Enter Employee Name",
         },
       ],
       type: "text",
@@ -25,7 +25,7 @@ const EmployeeForm = ({ form, onOk, onCancel }) => {
       rules: [
         {
           required: true,
-          message: "Please input the title of collection!",
+          message: "Please Enter Employee ID",
         },
       ],
       type: "text",
@@ -37,7 +37,7 @@ const EmployeeForm = ({ form, onOk, onCancel }) => {
       rules: [
         {
           required: true,
-          message: "Please input the title of collection!",
+          message: "Please Enter Employee Designation",
         },
       ],
       type: "text",
@@ -49,7 +49,8 @@ const EmployeeForm = ({ form, onOk, onCancel }) => {
       rules: [
         {
           required: true,
-          message: "Please input the title of collection!",
+          type: "email",
+          message: "Please Enter Employee Email",
         },
       ],
       type: "email",
@@ -61,7 +62,7 @@ const EmployeeForm = ({ form, onOk, onCancel }) => {
       rules: [
         {
           required: true,
-          message: "Please input the title of collection!",
+          message: "Please Enter Employee Phone",
         },
       ],
       type: "number",
@@ -75,11 +76,12 @@ const EmployeeForm = ({ form, onOk, onCancel }) => {
         {isEdit ? "Edit Employee" : "Add Employee"}
       </h1>
       <Form form={form} layout="vertical">
-        <CommonForm formFields={formFields} form={form} />
+        <CommonStaticForm formFields={formFields} form={form} />
         {/* cancle and submit button */}
 
         <div className="flex justify-end">
           <Button
+            className="bg-red-500 text-white"
             onClick={() => {
               onCancel();
             }}
@@ -88,6 +90,7 @@ const EmployeeForm = ({ form, onOk, onCancel }) => {
           </Button>
           <Button
             type="submit"
+            className="bg-green-500 text-white ml-2"
             onClick={() => {
               onOk();
             }}

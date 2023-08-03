@@ -6,6 +6,7 @@ import {
   getDataFromLocalStorage,
   uniqueIdGenerator,
 } from "../utils/comonFunction";
+import TableActionButton from "../common/TableActionButton";
 
 const TaskPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,23 +65,19 @@ const TaskPage = () => {
       // eslint-disable-next-line no-unused-vars
       render: (text, record) => (
         <span>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-md mx-2"
+          <TableActionButton
+            type="edit"
             onClick={() => {
               setIsModalOpen(true);
               form.setFieldsValue(record);
             }}
-          >
-            Edit
-          </button>
-          <button
-            className="bg-red-500 text-white px-4 py-2 rounded-md"
+          />
+          <TableActionButton
+            type="delete"
             onClick={() => {
               deleteFromLocalStorage("tasklist", record, setTasklist);
             }}
-          >
-            Delete
-          </button>
+          />
         </span>
       ),
     },

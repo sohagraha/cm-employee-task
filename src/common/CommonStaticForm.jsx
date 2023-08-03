@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Form, Input, Select } from "antd";
+import { Checkbox, Form, Input, Select } from "antd";
 
 const CommonForm = ({ formFields, form }) => {
   return (
@@ -26,9 +26,28 @@ const CommonForm = ({ formFields, form }) => {
             >
               <Select
                 options={field?.options || []}
+                allowClear
                 onChange={(value, option) => {
                   form?.setFieldsValue({
-                    [field.name]: option,
+                    [field?.name]: option,
+                  });
+                }}
+              />
+            </Form.Item>
+          );
+        } else if (field?.group === "checkbox") {
+          return (
+            <Form.Item
+              key={index}
+              name={field?.name || "Undefined"}
+              label={field?.label || ""}
+              rules={field?.rules || false}
+            >
+              <Checkbox
+                options={field?.options || []}
+                onChange={(e) => {
+                  form?.setFieldsValue({
+                    [field?.name]: e.target.checked,
                   });
                 }}
               />

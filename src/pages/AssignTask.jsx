@@ -7,6 +7,7 @@ import {
   getDataFromLocalStorage,
   uniqueIdGenerator,
 } from "../utils/comonFunction";
+import TableActionButton from "../common/TableActionButton";
 
 const AssignTaskPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,6 +22,7 @@ const AssignTaskPage = () => {
   const handleOk = async () => {
     await form.validateFields();
     const data = form.getFieldsValue(true);
+    console.log(data);
     const taskassignlist =
       JSON.parse(localStorage.getItem("taskassignlist")) || [];
 
@@ -54,16 +56,13 @@ const AssignTaskPage = () => {
       dataIndex: "name",
       key: "name",
       render: (text, record) => {
-        return <span>{record.employee?.label}</span>;
+        return <span>{record.employee?.name}</span>;
       },
     },
     {
       title: "Task Name",
-      dataIndex: "taskname",
-      key: "taskname",
-      render: (text, record) => {
-        return <span>{record.task?.label}</span>;
-      },
+      dataIndex: "task",
+      key: "task",
     },
     {
       title: "Created At",
@@ -78,17 +77,15 @@ const AssignTaskPage = () => {
       // eslint-disable-next-line no-unused-vars
       render: (text, record) => (
         <span>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-md mx-2"
+          <TableActionButton
+            type="edit"
             onClick={() => {
               setIsModalOpen(true);
               form.setFieldsValue(record);
             }}
-          >
-            Edit
-          </button>
-          <button
-            className="bg-red-500 text-white px-4 py-2 rounded-md"
+          />
+          <TableActionButton
+            type="delete"
             onClick={() => {
               deleteFromLocalStorage(
                 "taskassignlist",
@@ -96,9 +93,7 @@ const AssignTaskPage = () => {
                 setTaskAssignlist
               );
             }}
-          >
-            Delete
-          </button>
+          />
         </span>
       ),
     },
